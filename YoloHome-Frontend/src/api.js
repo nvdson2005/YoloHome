@@ -1,0 +1,17 @@
+const BASE = 'http://localhost:8000'
+
+function call(url, options) {
+  const fetchArgs = options ? [url, options] : [url]
+  return fetch(...fetchArgs).then(r => {
+    if (!r.ok) throw new Error(String(r.status))
+    return r.json()
+  })
+}
+
+export const getTemperature = () => call(`${BASE}/feeds/nhiet-do`)
+export const getTempHistory  = () => call(`${BASE}/feeds/lich-su-nhiet-do`)
+export const getHumidity     = () => call(`${BASE}/feeds/do-am`)
+export const getLight        = () => call(`${BASE}/feeds/den`)
+export const setLight        = (status) => call(`${BASE}/feeds/den?status=${encodeURIComponent(status)}`, { method: 'POST' })
+export const getFan          = () => call(`${BASE}/feeds/quat`)
+export const setFan          = (status) => call(`${BASE}/feeds/quat?status=${encodeURIComponent(status)}`, { method: 'POST' })
