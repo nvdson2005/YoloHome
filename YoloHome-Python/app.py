@@ -51,6 +51,14 @@ async def get_do_am():
     except RequestError as e:
         raise HTTPException(status_code=502, detail=str(e))
 
+@app.get("/feeds/lich-su-do-am")
+async def get_lich_su_nhiet_do():
+    try:
+        data = aio.data("do-am")
+        return {"feed": "do-am", "value": data}
+    except RequestError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
 @app.get("/feeds/den")
 async def get_den():
     try:

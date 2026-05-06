@@ -11,6 +11,7 @@ function call(url, options) {
 export const getTemperature = () => call(`${BASE}/feeds/nhiet-do`)
 export const getTempHistory  = () => call(`${BASE}/feeds/lich-su-nhiet-do`)
 export const getHumidity     = () => call(`${BASE}/feeds/do-am`)
+export const getHumidityHistory     = () => call(`${BASE}/feeds/lich-su-do-am`)
 export const getLight        = () => call(`${BASE}/feeds/den`)
 export const setLight        = (status) => call(`${BASE}/feeds/den?status=${encodeURIComponent(status)}`, { method: 'POST' })
 export const getFan          = () => call(`${BASE}/feeds/quat`)

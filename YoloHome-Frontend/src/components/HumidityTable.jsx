@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { getTempHistory } from '../api'
+import { getHumidityHistory } from '../api'
 
-export default function TempTable() {
+export default function HumidityTable() {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['lich-su-nhiet-do'],
-    queryFn: getTempHistory,
+    queryKey: ['lich-su-do-am'],
+    queryFn: getHumidityHistory,
     refetchInterval: 30000,
   })
 
@@ -23,7 +23,7 @@ export default function TempTable() {
         <thead className="sticky top-0 bg-gray-50 dark:bg-gray-800">
           <tr>
             <th className="text-left px-4 py-2 font-medium text-gray-500 dark:text-gray-400">Time</th>
-            <th className="text-right px-4 py-2 font-medium text-gray-500 dark:text-gray-400">Temperature</th>
+            <th className="text-right px-4 py-2 font-medium text-gray-500 dark:text-gray-400">Humidity</th>
           </tr>
         </thead>
         <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-100 dark:divide-gray-800">
@@ -33,7 +33,7 @@ export default function TempTable() {
                 {new Date(item[1]).toLocaleString()}
               </td>
               <td className="px-4 py-2 text-right font-mono text-gray-900 dark:text-gray-100">
-                {parseFloat(item[3]).toFixed(1)} °C
+                {parseFloat(item[3]).toFixed(1)} %
               </td>
             </tr>
           ))}

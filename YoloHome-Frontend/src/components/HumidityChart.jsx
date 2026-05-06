@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts'
-import { getTempHistory } from '../api'
+import { getHumidityHistory } from '../api'
 
-export default function TempChart() {
+export default function HumidityChart() {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['lich-su-nhiet-do'],
-    queryFn: getTempHistory,
+    queryKey: ['lich-su-do-am'],
+    queryFn: getHumidityHistory,
     refetchInterval: 30000,
   })
 
@@ -31,8 +31,8 @@ export default function TempChart() {
       <LineChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
         <XAxis dataKey="time" tick={{ fontSize: 12 }} />
-        <YAxis tick={{ fontSize: 12 }} unit="°C" domain={['auto', 'auto']} />
-        <Tooltip formatter={(v) => [`${v}°C`, 'Temperature']} />
+        <YAxis tick={{ fontSize: 12 }} unit="%" domain={['auto', 'auto']} />
+        <Tooltip formatter={(v) => [`${v}%`, 'Humidity']} />
         <Line type="monotone" dataKey="temp" stroke="#3b82f6" strokeWidth={2} dot={false} />
       </LineChart>
     </ResponsiveContainer>
