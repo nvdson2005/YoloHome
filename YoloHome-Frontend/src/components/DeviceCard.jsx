@@ -15,7 +15,7 @@ export default function DeviceCard({ queryKey, queryFn, mutationFn, label, icon,
     onError: (err) => onError?.(err.message || 'Failed to update device'),
   })
 
-  const isOn = data?.value === 'ON'
+  const isOn = data?.value === '1'
 
   return (
     <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow p-6">

@@ -3,6 +3,11 @@ from pydantic import BaseModel
 from client import aio
 from Adafruit_IO.errors import RequestError
 from fastapi.middleware.cors import CORSMiddleware
+import time
+
+last_updated = time.localtime()
+delay = 30
+data = []
 
 app = FastAPI()
 origins = [
@@ -21,13 +26,32 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+async def get_group():
+    if time.localtime() - last_updated < delay:
+        return data
+
+    try:
+        data = aio.groups('Default').feeds
+        last_updated = time.localtime()
+        return data
+    except RequestError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
+try:
+    data = aio.groups('default')
+    last_updated = time.localtime()
+    print(data)
+except RequestError as e:
+    raise HTTPException(status_code=502, detail=str(e))
+
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
-
 @app.get("/feeds/nhiet-do")
 async def get_nhiet_do():
+    # return get_group()[4]
     try:
         data = aio.receive("nhiet-do")
         return {"feed": "nhiet-do", "value": data.value, "created_at": data.created_at}
@@ -89,9 +113,9 @@ async def set_den(status: bool):
         if status not in [0, 1]:
             raise HTTPException(status_code=400, detail="Status must be 0 or 1")
         if status:
-            aio.send_data("den", "ON")
+            aio.send_data("den", "1")
         else:
-            aio.send_data("den", "OFF")
+            aio.send_data("den", "0")
         return {"feed": "den", "value": int(status)}
     except RequestError as e:
         raise HTTPException(status_code=502, detail=str(e))
@@ -110,9 +134,9 @@ async def set_quat(status: bool):
         if status not in [0, 1]:
             raise HTTPException(status_code=400, detail="Status must be 0 or 1")
         if status:
-            aio.send_data("quat", "ON")
+            aio.send_data("quat", "1")
         else:
-            aio.send_data("quat", "OFF")
+            aio.send_data("quat", "0")
         return {"feed": "quat", "value": int(status)}
     except RequestError as e:
         raise HTTPException(status_code=502, detail=str(e))
@@ -131,9 +155,9 @@ async def set_quat(status: bool):
         if status not in [0, 1]:
             raise HTTPException(status_code=400, detail="Status must be 0 or 1")
         if status:
-            aio.send_data("mode", "ON")
+            aio.send_data("mode", "1")
         else:
-            aio.send_data("mode", "OFF")
+            aio.send_data("mode", "0")
         return {"feed": "mode", "value": int(status)}
     except RequestError as e:
         raise HTTPException(status_code=502, detail=str(e))
