@@ -100,3 +100,24 @@ async def set_quat(status: bool):
         return {"feed": "quat", "value": int(status)}
     except RequestError as e:
         raise HTTPException(status_code=502, detail=str(e))
+
+@app.get("/feeds/mode")
+async def get_quat():
+    try:
+        data = aio.receive("mode")
+        return {"feed": "mode", "value": data.value, "created_at": data.created_at}
+    except RequestError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
+@app.post("/feeds/mode")
+async def set_quat(status: bool):
+    try:
+        if status not in [0, 1]:
+            raise HTTPException(status_code=400, detail="Status must be 0 or 1")
+        if status:
+            aio.send_data("mode", "ON")
+        else:
+            aio.send_data("mode", "OFF")
+        return {"feed": "mode", "value": int(status)}
+    except RequestError as e:
+        raise HTTPException(status_code=502, detail=str(e))

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import DeviceCard from './DeviceCard'
 import Toast from './Toast'
-import { getLight, setLight, getFan, setFan } from '../api'
+import { getLight, setLight, getFan, setFan, getMode, setMode } from '../api'
 
 export default function DeviceSection() {
   const [toastMsg, setToastMsg] = useState(null)
@@ -24,6 +24,14 @@ export default function DeviceSection() {
           mutationFn={setFan}
           label="Fan"
           icon="🌀"
+          onError={setToastMsg}
+        />
+        <DeviceCard
+          queryKey="mode"
+          queryFn={getMode}
+          mutationFn={setMode}
+          label="Mode"
+          icon="⚙"
           onError={setToastMsg}
         />
       </div>
