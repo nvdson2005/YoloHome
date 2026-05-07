@@ -1,5 +1,5 @@
 import SensorCard from './SensorCard'
-import { getTemperature, getHumidity } from '../api'
+import { getTemperature, getHumidity, getLightness } from '../api'
 
 export default function SensorSection() {
   return (
@@ -19,6 +19,13 @@ export default function SensorSection() {
           label="Humidity"
           unit="%"
           icon="💧"
+        />
+        <SensorCard
+          queryKey="do-sang"
+          queryFn={getLightness}
+          label="Lightness"
+          unit="Lux"
+          icon="💡"
         />
       </div>
     </section>

@@ -55,7 +55,23 @@ async def get_do_am():
 async def get_lich_su_nhiet_do():
     try:
         data = aio.data("do-am")
-        return {"feed": "do-am", "value": data}
+        return {"feed": "do-sang", "value": data}
+    except RequestError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
+@app.get("/feeds/do-sang")
+async def get_do_am():
+    try:
+        data = aio.receive("do-sang")
+        return {"feed": "do-sang", "value": data.value, "created_at": data.created_at}
+    except RequestError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
+@app.get("/feeds/lich-su-do-sang")
+async def get_lich_su_nhiet_do():
+    try:
+        data = aio.data("do-sang")
+        return {"feed": "do-sang", "value": data}
     except RequestError as e:
         raise HTTPException(status_code=502, detail=str(e))
 
