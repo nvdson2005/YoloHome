@@ -5,38 +5,35 @@ from Adafruit_IO.errors import RequestError
 from fastapi.middleware.cors import CORSMiddleware
 import time
 
-last_updated = time.localtime()
+last_updated = time.time()
 delay = 30
 data = []
 
 app = FastAPI()
-origins = [
-    "http://localhost:8080",
-    "http://localhost:5173",
-]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 async def get_group():
-    if time.localtime() - last_updated < delay:
+    global data, last_updated
+    if time.time() - last_updated < delay:
         return data
 
     try:
-        data = aio.groups('Default').feeds
-        last_updated = time.localtime()
+        data = aio.groups('Default')[0].feeds
+        last_updated = time.time()
         return data
     except RequestError as e:
         raise HTTPException(status_code=502, detail=str(e))
 
 try:
     data = aio.groups('default')
-    last_updated = time.localtime()
+    last_updated = time.time()
     print(data)
 except RequestError as e:
     raise HTTPException(status_code=502, detail=str(e))
@@ -73,15 +70,15 @@ async def get_do_am():
         raise HTTPException(status_code=502, detail=str(e))
 
 @app.get("/feeds/lich-su-do-am")
-async def get_lich_su_nhiet_do():
+async def get_lich_su_do_am():
     try:
         data = aio.data("do-am")
-        return {"feed": "do-sang", "value": data}
+        return {"feed": "do-am", "value": data}
     except RequestError as e:
         raise HTTPException(status_code=502, detail=str(e))
 
 @app.get("/feeds/do-sang")
-async def get_do_am():
+async def get_do_sang():
     try:
         data = aio.receive("do-sang")
         return {"feed": "do-sang", "value": data.value, "created_at": data.created_at}
@@ -89,31 +86,10 @@ async def get_do_am():
         raise HTTPException(status_code=502, detail=str(e))
 
 @app.get("/feeds/lich-su-do-sang")
-async def get_lich_su_nhiet_do():
+async def get_lich_su_do_sang():
     try:
         data = aio.data("do-sang")
         return {"feed": "do-sang", "value": data}
-    except RequestError as e:
-        raise HTTPException(status_code=502, detail=str(e))
-
-@app.get("/feeds/den")
-async def get_den():
-    try:
-        data = aio.receive("den")
-        return {"feed": "den", "value": data.value, "created_at": data.created_at}
-    except RequestError as e:
-        raise HTTPException(status_code=502, detail=str(e))
-
-@app.post("/feeds/den")
-async def set_den(status: bool):
-    try:
-        if status not in [0, 1]:
-            raise HTTPException(status_code=400, detail="Status must be 0 or 1")
-        if status:
-            aio.send_data("den", "1")
-        else:
-            aio.send_data("den", "0")
-        return {"feed": "den", "value": int(status)}
     except RequestError as e:
         raise HTTPException(status_code=502, detail=str(e))
 
@@ -139,7 +115,7 @@ async def set_quat(status: bool):
         raise HTTPException(status_code=502, detail=str(e))
 
 @app.get("/feeds/mode")
-async def get_quat():
+async def get_mode():
     try:
         data = aio.receive("mode")
         return {"feed": "mode", "value": data.value, "created_at": data.created_at}
@@ -147,7 +123,7 @@ async def get_quat():
         raise HTTPException(status_code=502, detail=str(e))
 
 @app.post("/feeds/mode")
-async def set_quat(status: bool):
+async def set_mode(status: bool):
     try:
         if status not in [0, 1]:
             raise HTTPException(status_code=400, detail="Status must be 0 or 1")
