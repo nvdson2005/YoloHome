@@ -19,7 +19,7 @@ function DeviceGroup({
   const { data, isLoading, isError } = useQuery({
     queryKey: [queryKey],
     queryFn,
-    refetchInterval: 5000,
+    refetchInterval: 1000,
   });
 
   const mutation = useMutation({
@@ -101,8 +101,8 @@ export default function DeviceSection() {
               queryKey="mode"
               queryFn={getMode}
               mutationFn={setMode}
-              onLabel="Auto"
-              offLabel="Manual"
+              onLabel="Manual"
+              offLabel="Auto"
               onError={showError}
               onSuccess={showSuccess}
             />

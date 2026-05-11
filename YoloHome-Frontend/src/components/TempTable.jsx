@@ -5,10 +5,10 @@ export default function TempTable() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['lich-su-nhiet-do'],
     queryFn: getTempHistory,
-    refetchInterval: 30000,
+    refetchInterval: 5000,
   })
 
-  const rows = (data?.value ?? []).slice().reverse()
+  const rows = (data?.value ?? []).slice()
 
   if (isLoading) {
     return <div className="animate-pulse h-40 bg-gray-200 dark:bg-gray-700 rounded-xl" />
