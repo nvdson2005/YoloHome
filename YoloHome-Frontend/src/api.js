@@ -1,4 +1,4 @@
-const BASE = 'https://yolo-home-python.vercel.app/'
+const BASE = 'https://yolo-home-python.vercel.app'
 
 function call(url, options) {
   const fetchArgs = options ? [url, options] : [url]
